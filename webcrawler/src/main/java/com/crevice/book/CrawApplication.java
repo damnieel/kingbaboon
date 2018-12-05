@@ -2,7 +2,7 @@ package com.crevice.book;
 
 import java.io.IOException;
 
-public class CrawRunnable {
+public class CrawApplication {
 	public static void main(String[] args) {
 		try {
 			CrawlText.getText(true, true, "http://www.biquge.com.tw/1_1958/");
