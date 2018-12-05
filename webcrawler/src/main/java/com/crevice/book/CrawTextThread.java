@@ -21,7 +21,7 @@ public class CrawTextThread extends Thread {
     String rule_title = "h1";
     String rule_content = "content";
     
-    public static String PATH = "D:\\JSOUP\\";
+    public static String PATH = "E:\\Craw\\";
 
     /**
      * 创建文件
