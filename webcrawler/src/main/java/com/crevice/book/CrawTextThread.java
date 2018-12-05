@@ -57,7 +57,7 @@ public class CrawTextThread extends Thread {
 
     @Override
     public void run() {
-        currentThread().setName("一个都别跑:");
+        currentThread().setName("斗罗大陆爬虫运行:");
         
         String title;
         
@@ -73,7 +73,7 @@ public class CrawTextThread extends Thread {
                 File file = new File(PATH+title.replaceAll("<h1>", "").replaceAll("</h1>", "")+".txt");
                 createFile(file);
                 System.out.println("创建文件:"+file.getPath());
-                writeTxtFile(FileterHtml(content), file);
+                writeTxtFile(fileterHtml(content), file);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (Exception e) {
@@ -82,7 +82,7 @@ public class CrawTextThread extends Thread {
         }
     }
     
-    public static String FileterHtml(String str) {
-        return str.replaceAll(" ", "").replaceAll("<br>", "\r\n");
+    public static String fileterHtml(String str) {
+        return str.replaceAll(" ", "").replaceAll("&nbsp;", "").replaceAll("<br>", "\r\n");
     }
 }
