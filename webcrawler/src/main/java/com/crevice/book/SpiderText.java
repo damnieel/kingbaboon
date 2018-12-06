@@ -9,7 +9,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class CrawlText {
+public class SpiderText {
 	 public static void getText(boolean autoDownloadFile, boolean Multithreading, String Url) throws IOException {
 
 	        String rule = "abs:href";
@@ -29,7 +29,7 @@ public class CrawlText {
 	            urlList.add(element.attr(rule));
 	        }
 	        
-	        CrawTextThread crawTextThread = new CrawTextThread(urlList);
+	        SpiderTextThread crawTextThread = new SpiderTextThread(urlList);
 	        crawTextThread.start();
 	    }
 }

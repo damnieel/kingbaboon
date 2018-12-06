@@ -9,11 +9,11 @@ import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-public class CrawTextThread extends Thread {
+public class SpiderTextThread extends Thread {
 
     List<String> UrlList;
 
-    public CrawTextThread(List<String> urlList) {
+    public SpiderTextThread(List<String> urlList) {
         this.UrlList = urlList;
     }
 

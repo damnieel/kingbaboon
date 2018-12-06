@@ -23,7 +23,7 @@ import org.jsoup.select.Elements;
  * @date 2017年10月22日 上午11:36:55
  */
 
-public class CrawlPicture {
+public class SpiderPicture {
     /**
      * 第一步：获取页面的源代码；
      * 第二步：解析源代码，含有图片的标签，再找到图片标签里面的src；
