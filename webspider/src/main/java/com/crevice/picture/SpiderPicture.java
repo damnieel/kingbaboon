@@ -88,6 +88,8 @@ public class SpiderPicture {
         try {
             URL url = new URL(imageUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
+            connection.setRequestProperty("referer", "http://i.meizitu.net");
             InputStream is = connection.getInputStream();
             // 创建文件
             File file = new File(filePath+fileName);
@@ -104,22 +106,23 @@ public class SpiderPicture {
     }
     
     //执行测试程序代码
-    public static void main(String[] args) {
-        String url = "https://www.qq.com/";
+    public static void main(String[] args) throws IOException {
+        String url = "https://www.mzitu.com/tag/youhuo/";
         System.out.println("网页地址："+url);
-        String encoding = "gb2312";
+        String encoding = "utf-8";
         System.out.println("编码方式："+encoding);
         String filePath = "C:\\Users\\CM20180419\\Desktop\\beauty";
         System.out.println("下载到电脑的位置："+filePath);
-        String htmlResource = getHtmlResourceByUrl(url, encoding);
+       /* String htmlResource = getHtmlResourceByUrl(url, encoding);*/
         // System.out.println(htmlResource);
         // 解析网页源代码
-        Document document = Jsoup.parse(htmlResource);
+       /* Document document = Jsoup.parse(htmlResource);*/
+        Document document = Jsoup.connect(url).timeout(6000).userAgent("Mozilla\" to \"Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0)").get();
         // 获取所有图片的地址
         Elements elements = document.getElementsByTag("img");
         
         for(Element element : elements){
-            String imgSrc = element.attr("src");
+            String imgSrc = element.attr("data-original");
             if (!"".equals(imgSrc)) {
                 // 判断imgSrc是否为空且是否以"http://"开头\
             	if(!(imgSrc.startsWith("http://") || imgSrc.startsWith("https://"))){
