@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Scanner;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -106,13 +105,12 @@ public class SpiderPicture {
     
     //执行测试程序代码
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
-        System.out.print("请输入网页地址：");
-        String url = input.nextLine();
-        System.out.print("请输入编码方式：");
-        String encoding = input.nextLine();
-        System.out.print("请输入下载到电脑的位置：");
-        String filePath = input.nextLine();
+        String url = "https://www.qq.com/";
+        System.out.println("网页地址："+url);
+        String encoding = "gb2312";
+        System.out.println("编码方式："+encoding);
+        String filePath = "C:\\Users\\CM20180419\\Desktop\\beauty";
+        System.out.println("下载到电脑的位置："+filePath);
         String htmlResource = getHtmlResourceByUrl(url, encoding);
         // System.out.println(htmlResource);
         // 解析网页源代码
@@ -122,8 +120,11 @@ public class SpiderPicture {
         
         for(Element element : elements){
             String imgSrc = element.attr("src");
-            if (!"".equals(imgSrc) && (imgSrc.startsWith("http://") || imgSrc.startsWith("https://"))) {
-                // 判断imgSrc是否为空且是否以"http://"开头
+            if (!"".equals(imgSrc)) {
+                // 判断imgSrc是否为空且是否以"http://"开头\
+            	if(!(imgSrc.startsWith("http://") || imgSrc.startsWith("https://"))){
+            		imgSrc = "http:"+imgSrc;
+            	}
                 System.out.println("正在下载的图片的地址：" + imgSrc);
                 downImages(filePath, imgSrc);
             }

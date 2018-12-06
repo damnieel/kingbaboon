@@ -6,6 +6,6 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/java"/>
         <property name="java-output-path" value="/webspider/target/classes"/>
-        <property name="context-root" value="webcrawler"/>
+        <property name="context-root" value="webspider"/>
     </wb-module>
 </project-modules>
