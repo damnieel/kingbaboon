@@ -10,13 +10,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class SpiderText {
-	 public static void getText(boolean autoDownloadFile, boolean Multithreading, String Url) throws IOException {
+	 public static void getText(boolean autoDownloadFile, boolean Multithreading, String url) throws IOException {
 
 	        String rule = "abs:href";
 	        
 	        List<String> urlList = new ArrayList<String>();
 	            
-	        Document document = Jsoup.connect(Url)
+	        Document document = Jsoup.connect(url)
 	                .timeout(4000)
 	                .ignoreContentType(true)
 	                .userAgent("Mozilla\" to \"Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0)")
