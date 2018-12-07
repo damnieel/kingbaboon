@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
 
 public class SpiderUtil {
 	/**
@@ -24,6 +23,7 @@ public class SpiderUtil {
         try {
             URL url = new URL(sourceUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(3*1000);
             connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
             connection.setRequestProperty("referer", "http://i.meizitu.net");
             InputStream is = connection.getInputStream();
@@ -41,36 +41,17 @@ public class SpiderUtil {
         }
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	public static String getFileNameByUrl(String url) {
+		return url.substring(url.lastIndexOf("/"));
+	}
 	
 	public static void main(String[] args) throws Exception {
-		String html = HttpRequest.get("https://www.mzitu.com", new HashMap<String, String>(),"gb2312");
-		System.out.println(html);
+		String filePath = "C:\\Users\\CM20180419\\Desktop";
+		String url = "http://mirrors.hust.edu.cn/apache/tomcat/tomcat-8/v8.5.35/bin/apache-tomcat-8.5.35-windows-x86.zip";
+		String fileName = getFileNameByUrl(url);
+		long startTime = System.currentTimeMillis();
+		downloadFile(filePath,fileName,url);
+		long endTime = System.currentTimeMillis();
+		System.out.println("用时"+(endTime-startTime)/1000+"s");
 	}
 }

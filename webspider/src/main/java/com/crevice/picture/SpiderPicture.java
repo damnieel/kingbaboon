@@ -110,7 +110,7 @@ public class SpiderPicture {
                 System.out.println("正在下载的图片的地址：" + imageUrl);
                 
                 // 截取图片的名称
-                String fileName = imageUrl.substring(imageUrl.lastIndexOf("/"));
+                String fileName = SpiderUtil.getFileNameByUrl(imageUrl);
                 
                 SpiderUtil.downloadFile(filePath, fileName, imageUrl);
             }
