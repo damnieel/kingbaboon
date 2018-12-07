@@ -1,7 +1,9 @@
 package com.crevice.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -26,14 +28,16 @@ public class SpiderUtil {
             connection.setConnectTimeout(3*1000);
             connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
             connection.setRequestProperty("referer", "http://i.meizitu.net");
+            //获取数据流
             InputStream is = connection.getInputStream();
             // 创建文件
             File file = new File(filePath+fileName);
             FileOutputStream out = new FileOutputStream(file);
-            int i = 0;
-            while((i = is.read()) != -1){
-                out.write(i);
-            }
+            //将数据流 转化为 byte数组
+            byte[] byteArray = inputStream2ByteArray(is);
+            //将流数组写入文件
+            out.write(byteArray);
+            
             is.close();
             out.close();
         } catch (Exception e) {
@@ -44,6 +48,23 @@ public class SpiderUtil {
 	public static String getFileNameByUrl(String url) {
 		return url.substring(url.lastIndexOf("/"));
 	}
+	
+	/**
+     * 从输入流中获取字节数组
+     * @param inputStream
+     * @return
+     * @throws IOException
+     */
+    public static byte[] inputStream2ByteArray(InputStream inputStream) throws IOException {
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        while((len = inputStream.read(buffer)) != -1) {
+            bos.write(buffer, 0, len);
+        }
+        bos.close();
+        return bos.toByteArray();
+    }
 	
 	public static void main(String[] args) throws Exception {
 		String filePath = "C:\\Users\\CM20180419\\Desktop";
