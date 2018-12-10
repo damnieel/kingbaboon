@@ -13,9 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class SpiderUtil {
-	private static String filePath = "C:\\Users\\CM20180419\\Desktop\\";
-	private static int threadCount = 3; //线程数
-	private static int blockSize; //分块大小
+	/*private static String filePath = "C:\\Users\\CM20180419\\Desktop\\";*/
 	private static int currentRunThreadCount = 0; //当前线程
 	
 	/**
@@ -79,14 +77,20 @@ public class SpiderUtil {
 	/**
 	 * xiaohui
      * 多线程下载
+     * 1.本地创建一个大小跟要获取的文件相同大小的 临时文件
+     * 2.计算分配几个线程去下载服务器上的资源，知道每个线程下载文件的位置
+     * 3.开启多个 n 线程，每一个线程下载的对应位置的文件
+     * 4.如果所有的线程，都把自己的数据下载完毕了，就成功
+     * 
      * @param filePath 文件所要存放的路径
 	 * @param fileName 文件的所要取得名称
 	 * @param sourceUrl 源文件url
+	 * @param threadCount 线程数
      * @return
      * @throws IOException
      */
     @SuppressWarnings("resource")
-	public static void multiThreadDownloadFile(String filePath,String fileName,String sourceUrl){
+	public static void multiThreadDownloadFile(String filePath,String sourceUrl,int threadCount){
     	try {
             URL url = new URL(sourceUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -96,106 +100,97 @@ public class SpiderUtil {
             int code = connection.getResponseCode();
             if(code == 200) {
                 int fileLength = connection.getContentLength();
-                RandomAccessFile randomAccessFile = new RandomAccessFile(new File(filePath+fileName), "rw");
-                randomAccessFile.setLength(fileLength);
-                blockSize = fileLength / threadCount;
-                for(int i = 0; i < threadCount; i ++) {
-                    int startThread = i * blockSize;
-                    int endThread = (i + 1) * blockSize - 1;
-                    if( i == blockSize - 1) endThread = fileLength -1;
-                    new DownloadThread(i, startThread, endThread,sourceUrl).start();
+                System.out.println("文件总长度:"+fileLength);
+                
+                //创建一个可随机访问的可读取和写入的文件
+                RandomAccessFile raf = new RandomAccessFile(new File(filePath+getFileNameByUrl(sourceUrl)), "rwd");
+                raf.setLength(fileLength);
+                raf.close();
+                
+                int blockSize = fileLength / threadCount;
+                for(int threadId = 1; threadId <= threadCount; threadId ++) {
+                    int startIndex = (threadId - 1) * blockSize;
+                    int endIndex = threadId * blockSize - 1;
+                    if(threadId == threadCount) { 	//最后一个线程要长一点
+                    	endIndex = fileLength;
+                    }
+                    System.out.println("理论线程:"+threadId+",开始位置:"+startIndex+",结束位置:"+endIndex);
+                    new DownloadThread(threadId, startIndex, endIndex,filePath,sourceUrl).start();
                 }
+            }else{
+            	System.out.println("服务器错误.");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
-    public static class DownloadThread extends Thread {
-        private int threadId;
-        private int endThread;
-        private int startThred;
-        private String sourceUrl;
-        
-        public DownloadThread(int threadId, int endThread, int startThred,String sourceUrl) {
+    /**
+     * 下载文件的子线程 每一个线程下载对应的文件
+     * @author xiaohui
+     *
+     * @param threadId 文件所要存放的路径
+	 * @param startIndex 线程下载的开始位置
+	 * @param endIndex 线程下载的结束位置
+	 * @param sourceUrl 源文件url
+     */
+    public static class DownloadThread extends Thread{
+    	private int threadId;
+    	private int startIndex;
+    	private int endIndex;
+    	private String filePath;
+    	private String sourceUrl;
+
+		public DownloadThread(int threadId, int startIndex, int endIndex,
+				String filePath, String sourceUrl) {
 			super();
 			this.threadId = threadId;
-			this.endThread = endThread;
-			this.startThred = startThred;
+			this.startIndex = startIndex;
+			this.endIndex = endIndex;
+			this.filePath = filePath;
 			this.sourceUrl = sourceUrl;
 		}
 
-		public void run() {    
-            synchronized (DownloadThread.class) {
-                currentRunThreadCount += 1;
-            }
-            //分段请求网络连接，分段保存在本地
-            try {
-                System.err.println("理论线程:"+threadId+",开始位置:"+startThred+",结束位置:"+endThread);
-                URL url = new URL(sourceUrl);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setConnectTimeout(3 * 1000);
-                connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
-                File file = new File(filePath+threadId+".zip");
-                if(file.exists()) {    //是否断点
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-                    String lastPostion_str = bufferedReader.readLine();
-                    startThred = Integer.parseInt(lastPostion_str);
-                    bufferedReader.close();
-                }
-                //设置分段下载的头信息  Range:做分段
-                connection.setRequestProperty("Range", "bytes:"+startThred+"-" + endThread);
-                int code = connection.getResponseCode();
-                System.out.println(code);
-                if(code == 200) {    //200:请求全部资源成功  206:代表部分资源请求成功
-                    InputStream inputStream = connection.getInputStream();
-                    System.out.println(getFileNameByUrl(sourceUrl));
-                    RandomAccessFile randomAccessFile = new RandomAccessFile(new File(filePath+getFileNameByUrl(sourceUrl)), "rw");
-                    randomAccessFile.seek(startThred);
-                    byte[] buffer = new byte[1024*10];
-                    int length = -1;
-                    int total = 0;//记录下载的总量
-                    System.err.println("实际线程:"+threadId+",开始位置:"+startThred+",结束位置:"+endThread);
-                    while((length = inputStream.read(buffer)) != -1) {
-                        randomAccessFile.write(buffer, 0, length);
-                        total += length;
-                        int currentThreadPostion = startThred + total;
-                        RandomAccessFile randomAccessFile2 = new RandomAccessFile(file, "rwd");
-                        randomAccessFile2.write(String.valueOf(currentThreadPostion).getBytes());
-                        randomAccessFile2.close();
-                    }
-                    randomAccessFile.close();
-                    inputStream.close();
-                    System.err.println("线程:"+threadId+"下载完毕");
-                    synchronized (DownloadThread.class) {
-                        currentRunThreadCount -= 1;
-                        if(currentRunThreadCount == 0){
-                            for(int i = 0; i < threadCount; i ++) {
-                                File file2 = new File(i+".txt");
-                                file2.delete();
-                            }
-                        }
-                    }
-                }
-                
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            super.run();
-        }
+		@Override
+		public void run() {
+			try {
+	            URL url = new URL(sourceUrl);
+	            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+	            connection.setRequestMethod("GET");
+	            connection.setConnectTimeout(3 * 1000);
+	            //设置分段下载的头信息  Range:做分段
+	            connection.setRequestProperty("Range", "bytes:"+startIndex+"-" + endIndex);
+	            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
+	            int code = connection.getResponseCode();
+	            System.out.println("code:"+code);
+	            InputStream is = connection.getInputStream();//返回当前位置对应的输入流
+	            RandomAccessFile raf = new RandomAccessFile(new File(filePath+getFileNameByUrl(sourceUrl)), "rwd");
+	            //随机写文件时 从哪个位置开始写
+	            raf.seek(startIndex);
+	            
+	            //将数据流 转化为 byte数组
+	            byte[] byteArray = inputStream2ByteArray(is);
+	            raf.write(byteArray);
+	            
+	            is.close();
+	            raf.close();
+	             
+	            System.out.println("线程:"+threadId+"下载完毕");
+			}catch (Exception e) {
+	            e.printStackTrace();
+	        }
+			super.run();
+		}
     }
-    /**
-     * 多线程下载
-     */
-    
     
 	public static void main(String[] args) throws Exception {
+		String filePath = "C:\\Users\\CM20180419\\Desktop\\";
 		String url = "http://mirrors.hust.edu.cn/apache/tomcat/tomcat-8/v8.5.35/bin/apache-tomcat-8.5.35-windows-x86.zip";
 		String fileName = getFileNameByUrl(url);
 		long startTime = System.currentTimeMillis();
-		downloadFile(filePath,fileName,url);
-		/*multiThreadDownloadFile(filePath,fileName,url);*/
+		/*downloadFile(filePath,fileName,url);*/
+		synchronized (SpiderUtil.class) {
+			multiThreadDownloadFile(filePath,url,3);
+		}
 		long endTime = System.currentTimeMillis();
 		System.out.println("用时"+(endTime-startTime)/1000+"s");
 	}
