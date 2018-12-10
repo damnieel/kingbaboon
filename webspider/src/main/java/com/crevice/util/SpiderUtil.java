@@ -1,23 +1,17 @@
 package com.crevice.util;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
 
-import org.eclipse.jdt.internal.compiler.ast.ThisReference;
-
 public class SpiderUtil {
 	/*private static String filePath = "C:\\Users\\CM20180419\\Desktop\\";*/
-	private static int currentRunThreadCount = 0; //当前线程
 	
 	/**
 	 * xiaohui
