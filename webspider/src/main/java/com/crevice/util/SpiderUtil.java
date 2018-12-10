@@ -11,6 +11,9 @@ import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Vector;
+
+import org.eclipse.jdt.internal.compiler.ast.ThisReference;
 
 public class SpiderUtil {
 	/*private static String filePath = "C:\\Users\\CM20180419\\Desktop\\";*/
@@ -24,6 +27,8 @@ public class SpiderUtil {
 	 * @param sourceUrl 源文件url
 	 */
 	public static void downloadFile(String filePath,String fileName,String sourceUrl) {
+		long startTime = System.currentTimeMillis();
+		
 		//创建文件的目录结构
         File files = new File(filePath);
         if(!files.exists()){// 判断文件夹是否存在，如果不存在就创建一个文件夹
@@ -51,6 +56,9 @@ public class SpiderUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+        long endTime = System.currentTimeMillis();
+		System.out.println("用时"+(endTime-startTime)/1000+"s");
 	}
 	
 	public static String getFileNameByUrl(String url) {
@@ -87,10 +95,15 @@ public class SpiderUtil {
 	 * @param sourceUrl 源文件url
 	 * @param threadCount 线程数
      * @return
+	 * @throws InterruptedException 
      * @throws IOException
      */
     @SuppressWarnings("resource")
-	public static void multiThreadDownloadFile(String filePath,String sourceUrl,int threadCount){
+	public static void multiThreadDownloadFile(String filePath,String sourceUrl,int threadCount) throws InterruptedException{
+    	long startTime = System.currentTimeMillis();
+    	//用来把线程装进去 用join方法让子线程全部执行完  用于计算时间
+    	Vector<DownloadThread> threadVector = new Vector<DownloadThread>();
+    	
     	try {
             URL url = new URL(sourceUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -115,7 +128,9 @@ public class SpiderUtil {
                     	endIndex = fileLength;
                     }
                     System.out.println("理论线程:"+threadId+",开始位置:"+startIndex+",结束位置:"+endIndex);
-                    new DownloadThread(threadId, startIndex, endIndex,filePath,sourceUrl).start();
+                    DownloadThread dt = new DownloadThread(threadId, startIndex, endIndex,filePath,sourceUrl);
+                    threadVector.add(dt);
+                    dt.start();
                 }
             }else{
             	System.out.println("服务器错误.");
@@ -123,6 +138,13 @@ public class SpiderUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    	
+    	for(DownloadThread tv :threadVector){
+    		tv.join();
+    	}
+    	
+    	long endTime = System.currentTimeMillis();
+    	System.out.println("用时"+(endTime-startTime)/1000+"s");
     }
     /**
      * 下载文件的子线程 每一个线程下载对应的文件
@@ -186,12 +208,10 @@ public class SpiderUtil {
 		String filePath = "C:\\Users\\CM20180419\\Desktop\\";
 		String url = "http://mirrors.hust.edu.cn/apache/tomcat/tomcat-8/v8.5.35/bin/apache-tomcat-8.5.35-windows-x86.zip";
 		String fileName = getFileNameByUrl(url);
-		long startTime = System.currentTimeMillis();
-		/*downloadFile(filePath,fileName,url);*/
-		synchronized (SpiderUtil.class) {
-			multiThreadDownloadFile(filePath,url,3);
-		}
-		long endTime = System.currentTimeMillis();
-		System.out.println("用时"+(endTime-startTime)/1000+"s");
+		
+		downloadFile(filePath,fileName,url);
+		
+		/*multiThreadDownloadFile(filePath,url,3);*/
+		
 	}
 }
