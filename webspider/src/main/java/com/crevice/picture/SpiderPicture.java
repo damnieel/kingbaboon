@@ -1,10 +1,6 @@
 package com.crevice.picture;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,9 +12,9 @@ import com.crevice.util.SpiderUtil;
 
 /**
  * 通过HTML解析实现图片批量下载
- * @author DorraChen
+ * @author xiaohui
  * @version v1.0
- * @date 2017年10月22日 上午11:36:55
+ * @date 2018年12月11日 上午11:36:55
  */
 
 public class SpiderPicture {
@@ -27,48 +23,6 @@ public class SpiderPicture {
      * 第二步：解析源代码，含有图片的标签，再找到图片标签里面的src；
      * 第三步：利用Java里面的net包，网络编程
      * */
-    
-    /**
-     * 根据网页和编码获取网页内容和源代码
-     * @param url
-     * @param encoding
-     */
-    public static String getHtmlResourceByUrl(String url,String encoding){
-        StringBuffer buffer   = new StringBuffer();
-        URL urlObj            = null;
-        URLConnection uc      = null;
-        InputStreamReader in  = null;
-        BufferedReader reader = null;
-        
-        try {
-            // 建立网络连接
-            urlObj = new URL(url);
-            // 打开网络连接
-            uc     = urlObj.openConnection();
-            // 创建输入流
-            in     = new InputStreamReader(uc.getInputStream(),encoding);
-            // 创建一个缓冲写入流
-            reader = new BufferedReader(in);
-            
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                // 一行一行追加
-                buffer.append(line+"\r\n");
-            }
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally{
-            try {
-                if (in != null) {
-                    in.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return buffer.toString();
-    }
     
     //执行测试程序代码
     public static void main(String[] args) throws IOException {
