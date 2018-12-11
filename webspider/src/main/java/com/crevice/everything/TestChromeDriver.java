@@ -25,7 +25,8 @@ public class TestChromeDriver {
 	        return new RemoteWebDriver(service.getUrl(), DesiredCapabilities.chrome());
 	 }
 	 
-	 public static void main(String[] args) throws IOException {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static void main(String[] args) throws IOException {
 
 	        WebDriver driver = TestChromeDriver.getChromeDriver();
 	        // 让浏览器访问 Baidu
