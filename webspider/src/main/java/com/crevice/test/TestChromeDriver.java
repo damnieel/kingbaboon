@@ -1,4 +1,4 @@
-package com.crevice.everything;
+package com.crevice.test;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +11,11 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
+/**
+ * chromeDriver是谷歌的浏览器驱动，用来适配Selenium,有图形页面存在，在调试爬虫下载运行的功能的时候会相对方便
+ * @author zhuangj
+ * @date 2017/11/14
+ */
 public class TestChromeDriver {
 	
 	 private static ChromeDriverService service;
