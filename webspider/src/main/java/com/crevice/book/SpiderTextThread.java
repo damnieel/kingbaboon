@@ -3,7 +3,6 @@ package com.crevice.book;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.List;
 
 import org.jsoup.Jsoup;
@@ -40,7 +39,6 @@ public class SpiderTextThread extends Thread {
     }
 
     public static void writeTxtFile(String content, File fileName) throws Exception {
-       /* RandomAccessFile mm = null;*/
         FileOutputStream o = null;
         try {
             o = new FileOutputStream(fileName);
@@ -48,11 +46,7 @@ public class SpiderTextThread extends Thread {
             o.close();
         } catch (Exception e) {
             e.printStackTrace();
-        } /*finally {
-            if (mm != null) {
-                mm.close();
-            }
-        }*/
+        } 
     }
 
     @Override
