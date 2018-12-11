@@ -36,7 +36,7 @@ public class TestChromeDriver {
 	        // 获取 网页的 title
 	        System.out.println(" Page title is: " +driver.getTitle());
 	        // 通过 id 找到 input 的 DOM
-	        WebElement element =driver.findElement(By.id("q"));
+	        WebElement element = driver.findElement(By.id("q"));
 	        // 输入关键字
 	        element.sendKeys("东鹏瓷砖");
 	        // 提交 input 所在的 form
