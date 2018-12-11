@@ -40,7 +40,7 @@ public class SpiderTextThread extends Thread {
     }
 
     public static void writeTxtFile(String content, File fileName) throws Exception {
-        RandomAccessFile mm = null;
+       /* RandomAccessFile mm = null;*/
         FileOutputStream o = null;
         try {
             o = new FileOutputStream(fileName);
@@ -48,11 +48,11 @@ public class SpiderTextThread extends Thread {
             o.close();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
+        } /*finally {
             if (mm != null) {
                 mm.close();
             }
-        }
+        }*/
     }
 
     @Override
