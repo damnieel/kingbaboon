@@ -9,6 +9,8 @@ import org.openqa.selenium.WebElement;
 
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
+import us.codecraft.webmagic.Spider;
+import us.codecraft.webmagic.downloader.HttpClientDownloader;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.selector.Html;
 
@@ -177,5 +179,15 @@ public class TestTaoBaoPageProcessor implements PageProcessor {
      */
     private Boolean isFirstPage(Html html){
         return isListPage(html)&&getCurrentPageNo(html).equals("1");
+    }
+    
+    public static void main(String[] args) {
+    	String keyWord = "瓷砖";
+    	Spider spider=Spider.create(new TestTaoBaoPageProcessor(keyWord));
+        HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
+        //免费代理不稳定老挂
+        //httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(new Proxy("0.0.0.0",0000)));
+        spider.setDownloader(httpClientDownloader);
+        spider.addUrl("https://s.taobao.com/search?q="+keyWord).thread(1).run();
     }
 }
