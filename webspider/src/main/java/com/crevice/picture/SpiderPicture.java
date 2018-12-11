@@ -11,6 +11,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.crevice.util.Constant;
 import com.crevice.util.SpiderUtil;
 
 /**
@@ -69,27 +70,13 @@ public class SpiderPicture {
         return buffer.toString();
     }
     
-    /**
-     * 根据图片的URL下载的图片到本地的filePath
-     * @param filePath 文件夹
-     * @param imageUrl 图片的网址
-     */
-    public static void downImages(String filePath,String imageUrl){
-        // 截取图片的名称
-        String fileName = imageUrl.substring(imageUrl.lastIndexOf("/"));
-        
-        SpiderUtil.downloadFile(filePath, fileName, imageUrl);
-    }
-
-	
-    
     //执行测试程序代码
     public static void main(String[] args) throws IOException {
         String url = "https://www.mzitu.com/tag/youhuo/";
         System.out.println("网页地址："+url);
         String encoding = "utf-8";
         System.out.println("编码方式："+encoding);
-        String filePath = "C:\\Users\\CM20180419\\Desktop\\beauty";
+        String filePath = "C:\\Users\\CM20180419\\Desktop\\beauty\\";
         System.out.println("下载到电脑的位置："+filePath);
         // 解析网页源代码
         /*Document document = Jsoup.parse(htmlResource);*/
@@ -112,7 +99,7 @@ public class SpiderPicture {
                 // 截取图片的名称
                 String fileName = SpiderUtil.getFileNameByUrl(imageUrl);
                 
-                SpiderUtil.downloadFile(filePath, fileName, imageUrl);
+                SpiderUtil.downloadFile(filePath, fileName, imageUrl,Constant.UA_CHROME,Constant.REFERER_MZ,null);
             }
         }
         System.out.println("-------------------------下载完毕！----------------------------");

@@ -20,7 +20,7 @@ public class SpiderUtil {
 	 * @param fileName 文件的所要取得名称
 	 * @param sourceUrl 源文件url
 	 */
-	public static void downloadFile(String filePath,String fileName,String sourceUrl) {
+	public static void downloadFile(String filePath,String fileName,String sourceUrl,String userAgent,String referer,String cookie) {
 		long startTime = System.currentTimeMillis();
 		
 		//创建文件的目录结构
@@ -33,8 +33,15 @@ public class SpiderUtil {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setConnectTimeout(3*1000);
-            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
-            /*connection.setRequestProperty("referer", "http://i.meizitu.net");*/
+            if(!Util.isEmpty(userAgent)){
+            	connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
+            }
+            if(!Util.isEmpty(referer)){
+            	connection.setRequestProperty("referer", referer);
+            }
+            if(!Util.isEmpty(cookie)){
+            	connection.setRequestProperty("cookie", cookie);
+            }
             //获取数据流
             InputStream is = connection.getInputStream();
             // 创建文件
@@ -53,6 +60,10 @@ public class SpiderUtil {
         
         long endTime = System.currentTimeMillis();
 		System.out.println("用时"+(endTime-startTime)/1000+"s");
+	}
+	
+	public static void downloadFile(String filePath,String fileName,String sourceUrl){
+		downloadFile( filePath, fileName, sourceUrl, null, null, null);
 	}
 	
 	public static String getFileNameByUrl(String url) {
