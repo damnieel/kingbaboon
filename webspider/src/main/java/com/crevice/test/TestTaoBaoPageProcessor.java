@@ -40,7 +40,6 @@ public class TestTaoBaoPageProcessor implements PageProcessor {
             .addHeader("Cache-Control", "max-age=0")
             .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0");
 
-
     public String getKeyWord() {
         return keyWord;
     }
