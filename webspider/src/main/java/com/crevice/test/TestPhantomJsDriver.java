@@ -39,5 +39,6 @@ public class TestPhantomJsDriver {
         WebDriver driver=getPhantomJSDriver();
         driver.get("http://www.baidu.com");
         System.out.println(driver.getCurrentUrl());
+        System.out.println(driver.getPageSource());
     }
 }
