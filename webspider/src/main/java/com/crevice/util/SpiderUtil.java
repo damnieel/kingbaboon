@@ -256,8 +256,8 @@ public class SpiderUtil {
 	public static void main(String[] args) throws Exception {
 		String filePath = "C:\\Users\\CM20180419\\Desktop\\";
 		String url = "http://mirrors.hust.edu.cn/apache/tomcat/tomcat-8/v8.5.35/bin/apache-tomcat-8.5.35-windows-x86.zip";
-		String fileName = getFileNameByUrl(url);
-		downloadFile(filePath,fileName,url);
-		/*multiThreadDownloadFile(filePath,url,3);*/
+		/*String fileName = getFileNameByUrl(url);
+		downloadFile(filePath,fileName,url);*/
+		multiThreadDownloadFile(filePath,url,3);
 	}
 }
