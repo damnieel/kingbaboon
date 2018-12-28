@@ -36,7 +36,7 @@ public class SpiderUtil {
             connection.setRequestMethod("GET");
             connection.setConnectTimeout(3*1000);
             if(!Util.isEmpty(userAgent)){
-            	connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
+            	connection.setRequestProperty("User-Agent", userAgent);
             }
             if(!Util.isEmpty(referer)){
             	connection.setRequestProperty("referer", referer);
@@ -44,18 +44,23 @@ public class SpiderUtil {
             if(!Util.isEmpty(cookie)){
             	connection.setRequestProperty("cookie", cookie);
             }
-            //获取数据流
-            InputStream is = connection.getInputStream();
-            // 创建文件
-            File file = new File(filePath+fileName);
-            FileOutputStream out = new FileOutputStream(file);
-            //将数据流 转化为 byte数组
-            byte[] byteArray = inputStream2ByteArray(is);
-            //将流数组写入文件
-            out.write(byteArray);
-            
-            is.close();
-            out.close();
+            int code = connection.getResponseCode();
+            if(code == 200) {
+                int fileLength = connection.getContentLength();
+                System.out.println("文件总长度:"+fileLength);
+	            //获取数据流
+	            InputStream is = connection.getInputStream();
+	            // 创建文件
+	            File file = new File(filePath+fileName);
+	            FileOutputStream out = new FileOutputStream(file);
+	            //将数据流 转化为 byte数组
+	            byte[] byteArray = inputStream2ByteArray(is);
+	            //将流数组写入文件
+	            out.write(byteArray);
+	            
+	            is.close();
+	            out.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
