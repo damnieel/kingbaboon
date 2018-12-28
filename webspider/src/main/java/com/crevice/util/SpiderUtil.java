@@ -34,7 +34,7 @@ public class SpiderUtil {
             URL url = new URL(sourceUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
-            connection.setConnectTimeout(3*1000);
+            connection.setConnectTimeout(5 * 1000);
             if(!Util.isEmpty(userAgent)){
             	connection.setRequestProperty("User-Agent", userAgent);
             }
@@ -70,7 +70,7 @@ public class SpiderUtil {
 	}
 	
 	public static void downloadFile(String filePath,String fileName,String sourceUrl){
-		downloadFile( filePath, fileName, sourceUrl, null, null, null);
+		downloadFile( filePath, fileName, sourceUrl, Constant.UA_CHROME, null, null);
 	}
 	
 	public static String getFileNameByUrl(String url) {

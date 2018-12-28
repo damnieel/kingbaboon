@@ -2,7 +2,7 @@ package com.crevice.util;
 
 public class Constant {
 	// User-Agent
-	public static final String UA_CHROME = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.56 ";
+	public static final String UA_CHROME = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36";
 	
 	// referer
 	public static final String REFERER_MZ = "http://i.meizitu.net";
