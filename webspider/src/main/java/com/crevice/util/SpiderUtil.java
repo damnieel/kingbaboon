@@ -113,7 +113,7 @@ public class SpiderUtil {
             URL url = new URL(sourceUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
-            connection.setConnectTimeout(3 * 1000);
+            connection.setConnectTimeout(5 * 1000);
             connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
             int code = connection.getResponseCode();
             if(code == 200) {
@@ -183,7 +183,7 @@ public class SpiderUtil {
 	            URL url = new URL(sourceUrl);
 	            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 	            connection.setRequestMethod("GET");
-	            connection.setConnectTimeout(3 * 1000);
+	            connection.setConnectTimeout(5 * 1000);
 	            //设置分段下载的头信息  Range:做分段
 	            connection.setRequestProperty("Range", "bytes:"+startIndex+"-" + endIndex);
 	            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36");
