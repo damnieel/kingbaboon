@@ -20,7 +20,7 @@ public class SpiderTextThread extends Thread {
     String rule_title = "h1";
     String rule_content = "content";
     
-    public static String PATH = "E:\\Craw\\";
+    public static String PATH = "E:\\斗罗大陆\\";
 
     /**
      * 创建文件
